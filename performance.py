@@ -73,6 +73,7 @@ def analysis(genotype):
     i=0
     k=0
     for theta in theta_range_IP:
+        #print(len(theta_range_IP))
         j=0
         for theta_dot in thetadot_range_IP:
             body.theta = theta
@@ -80,14 +81,14 @@ def analysis(genotype):
             f = 0.0
             for t in time_IP:
                 nn.step(np.concatenate((body.state(),np.zeros(4),np.zeros(3)))) #arrays for inputs for each task
-                nn_state_ip[k] = nn.states()
+                nn_state_ip[k] = nn.states() #re-sets the activations for every k
                 k += 1
                 f += body.step(stepsize_IP, np.array([nn.output()[0]]))
             fit_IP[i][j] = ((f/duration_IP)+7.65)/7
             j += 1
         i += 1
     fitness[0] = np.mean(fit_IP)
-
+    
     # Task 2
     body = cartpole.Cartpole()
     nn_state_cp = np.zeros((total_trials_CP*len(time_CP),nI+nH1+nH2+nO))
@@ -156,25 +157,25 @@ for i in range(reps):
 
         np.save(dir+"/perf_"+str(i)+".npy",f)
 
-        np.save(dir+"/perfmap_IP_"+str(i)+".npy",m1)
+        np.save(dir+"/perfmap_IP_"+str(i)+".npy",m1) #behavioral analysis based on starting conditions
         np.save(dir+"/perfmap_CP_"+str(i)+".npy",m2)
         np.save(dir+"/perfmap_LW_"+str(i)+".npy",m3)
 
-        np.save(dir+"/state_IP_"+str(i)+".npy",ns1)
+        np.save(dir+"/state_IP_"+str(i)+".npy",ns1) #to be used for infolesion analysis
         np.save(dir+"/state_CP_"+str(i)+".npy",ns2)
         np.save(dir+"/state_LW_"+str(i)+".npy",ns3)
 
-        print(i,bf[i][-1],f)
+        print('rep,best fitness, fitness for 3 tasks',i,bf[i][-1],f)
 
         if viz == 1:
-            plt.imshow(m1)
+            plt.imshow(m1) #plotting fit_IP
             plt.colorbar()
             plt.xlabel("Theta")
             plt.ylabel("ThetaDot")
             plt.title("Inverted Pendulum")
             plt.savefig(dir+"/perfmap_IP_"+str(i)+".png")
             plt.show()
-            plt.imshow(m2)
+            plt.imshow(m2) #plotting fit_CP
             plt.colorbar()
             plt.xlabel("Theta")
             plt.ylabel("ThetaDot")
