@@ -9,7 +9,6 @@ import sys
 
 dir = str(sys.argv[1])
 reps = int(sys.argv[2])
-viz = int(sys.argv[3])
 
 # ANN Params
 nI = 3+4+3
@@ -92,7 +91,7 @@ def analysis(genotype):
     # Task 2
     body = cartpole.Cartpole()
     nn_state_cp = np.zeros((total_trials_CP*len(time_CP),nI+nH1+nH2+nO))
-    total_steps = len(theta_range_CP) * len(thetadot_range_CP) * len(x_range_CP) * len(xdot_range_CP) * len(time_CP)
+    #total_steps = len(theta_range_CP) * len(thetadot_range_CP) * len(x_range_CP) * len(xdot_range_CP) * len(time_CP)
     fit_CP = np.zeros((len(theta_range_CP),len(thetadot_range_CP)))
     i = 0
     k = 0
@@ -121,7 +120,7 @@ def analysis(genotype):
     #Task 3
     body = leggedwalker.LeggedAgent(0.0,0.0)
     nn_state_lw = np.zeros((total_trials_LW*len(time_LW),nI+nH1+nH2+nO))
-    total_steps = len(theta_range_LW) * len(omega_range_LW) * len(time_LW)
+    #total_steps = len(theta_range_LW) * len(omega_range_LW) * len(time_LW)
     fit_LW = np.zeros((len(theta_range_LW),len(omega_range_LW)))
     i = 0
     k = 0
@@ -140,61 +139,198 @@ def analysis(genotype):
             j += 1
         i += 1
     fitness[2] = np.mean(fit_LW)
-    return fitness,fit_IP,fit_CP,fit_LW,nn_state_ip,nn_state_cp,nn_state_lw
+    return fitness,fitness[0],fitness[1],fitness[2],fit_IP,fit_CP,fit_LW,nn_state_ip,nn_state_cp,nn_state_lw
 
-gens = len(np.load(dir+"/average_history_0.npy"))
-gs=len(np.load(dir+"/best_individual_0.npy"))
+gens = len(np.load(dir+"/average_history_15.npy"))
+gs=len(np.load(dir+"/best_individual_15.npy"))
 af = np.zeros((reps,gens))
 bf = np.zeros((reps,gens))
 bi = np.zeros((reps,gs))
+
+fit_IP_list_good = []
+fit_CP_list_good = []
+fit_LW_list_good = []
+fit_IP_list_bad = []
+fit_CP_list_bad = []
+fit_LW_list_bad = []
+#best_net_list = []
 for i in range(reps):
     af[i] = np.load(dir+"/average_history_"+str(i)+".npy")
     bf[i] = np.load(dir+"/best_history_"+str(i)+".npy")
     bi[i] = np.load(dir+"/best_individual_"+str(i)+".npy")
-    if bf[i][-1]>0.8:
+    #best_net_list.append(bi[i])
+    
+    f,f1,f2,f3,m1,m2,m3,ns1,ns2,ns3=analysis(bi[i])
+    if bf[i][-1] > 0.8: #check last element in bf
+        fit_IP_list_good.append(f1)
+        fit_CP_list_good.append(f2)
+        fit_LW_list_good.append(f3)
 
-        f,m1,m2,m3,ns1,ns2,ns3=analysis(bi[i])
+        #plt.plot(bf[i].T,'b')
+        #if bf[i][-1] >=0.95:
+            #plt.plot(bf[i].T,'r')
+        
+    if bf[i][-1]<0.8:
+        fit_IP_list_bad.append(f1)
+        fit_CP_list_bad.append(f2)
+        fit_LW_list_bad.append(f3)
+        #plt.plot(af[i].T,'k')
+        #plt.plot(bf[i].T,'y')
+    #if bf[i][-1]>=0.95:
+        #plt.plot(bf[i].T,'r')
+        
+        
+#t = max([sublist[-1] for sublist in best_net_list])
+#for t in (sublist for sublist in best_net_list):
+#    print(t)
+#    plt.plot(sublist.T,'y')
+        
+#plt.xlabel('generations')
+#plt.ylabel('performance')
+#plt.title('evolution')
+#plt.savefig(dir+"/evolve_all.png")
+#plt.show()
 
-        np.save(dir+"/perf_"+str(i)+".npy",f)
+#print(max([sublist for sublist in best_net_list])
 
-        np.save(dir+"/perfmap_IP_"+str(i)+".npy",m1) #behavioral analysis based on starting conditions
-        np.save(dir+"/perfmap_CP_"+str(i)+".npy",m2)
-        np.save(dir+"/perfmap_LW_"+str(i)+".npy",m3)
+# =============================================================================
+#         np.save(dir+"/perfmap_IP_"+str(i)+".npy",m1) #behavioral analysis based on starting conditions
+#         np.save(dir+"/perfmap_CP_"+str(i)+".npy",m2)
+#         np.save(dir+"/perfmap_LW_"+str(i)+".npy",m3)
+# 
+#         np.save(dir+"/state_IP_"+str(i)+".npy",ns1) #to be used for infolesion analysis
+#         np.save(dir+"/state_CP_"+str(i)+".npy",ns2)
+#         np.save(dir+"/state_LW_"+str(i)+".npy",ns3)
+# 
+# =============================================================================
+        #print('rep,best fitness, fitness for 3 tasks',i,bf[i][-1],f)
+   
+        
+# =============================================================================
+# if viz == 1:
+#     plt.plot(af.T,'r')
+#     plt.plot(bf.T,'b')
+#     plt.plot(bi.T,'y')
+#     plt.show()
+# 
+# =============================================================================
 
-        np.save(dir+"/state_IP_"+str(i)+".npy",ns1) #to be used for infolesion analysis
-        np.save(dir+"/state_CP_"+str(i)+".npy",ns2)
-        np.save(dir+"/state_LW_"+str(i)+".npy",ns3)
-
-        print('rep,best fitness, fitness for 3 tasks',i,bf[i][-1],f)
-
-        if viz == 1:
-            plt.imshow(m1) #plotting fit_IP
-            plt.colorbar()
-            plt.xlabel("Theta")
-            plt.ylabel("ThetaDot")
-            plt.title("Inverted Pendulum")
-            plt.savefig(dir+"/perfmap_IP_"+str(i)+".png")
-            plt.show()
-            plt.imshow(m2) #plotting fit_CP
-            plt.colorbar()
-            plt.xlabel("Theta")
-            plt.ylabel("ThetaDot")
-            plt.title("Cart Pole")
-            plt.savefig(dir+"/perfmap_CP_"+str(i)+".png")
-            plt.show()
-            plt.imshow(m3)
-            plt.colorbar()
-            plt.xlabel("Theta")
-            plt.ylabel("ThetaDot")
-            plt.title("Legged Walker")
-            plt.savefig(dir+"/perfmap_LW_"+str(i)+".png")
-            plt.show()
-
-if viz == 1:
-    plt.plot(af.T,'y')
-    plt.plot(bf.T,'b')
-    plt.xlabel("Generations")
-    plt.ylabel("Fitness")
-    plt.title("Evolution")
-    plt.savefig(dir+"/evol.png")
-    plt.show()
+# =============================================================================
+#         if viz == 1:
+#             plt.imshow(m1) #plotting fit_IP
+#             plt.colorbar()
+#             plt.xlabel("Theta")
+#             plt.ylabel("ThetaDot")
+#             plt.title("Inverted Pendulum")
+#             plt.savefig(dir+"/perfmap_IP_"+str(i)+".png")
+#             #plt.show()
+#             plt.close()
+#             
+#             plt.imshow(m2) #plotting fit_CP
+#             plt.colorbar()
+#             plt.xlabel("Theta")
+#             plt.ylabel("ThetaDot")
+#             plt.title("Cart Pole")
+#             plt.savefig(dir+"/perfmap_CP_"+str(i)+".png")
+#             #plt.show()
+#             plt.close()
+#             
+#             plt.imshow(m3)
+#             plt.colorbar()
+#             plt.xlabel("Theta")
+#             plt.ylabel("ThetaDot")
+#             plt.title("Legged Walker")
+#             plt.savefig(dir+"/perfmap_LW_"+str(i)+".png")
+#             #plt.show()
+#             plt.close()
+# 
+# =============================================================================
+        
+x = fit_IP_list_good       
+y = fit_CP_list_good
+x2 = fit_IP_list_bad
+y2 = fit_CP_list_bad
+plt.ylim(0.8,1.01)
+plt.xlim(0.8,1.01)
+plt.plot(x, y, 'ro', x2, y2, 'bo')
+plt.xlabel('IP Fitness')
+plt.ylabel('CP Fitness')
+plt.title('IP vs CP Fitness')
+plt.savefig(dir+"/IP_vs_CP_scatter"+".png")
+plt.show()
+plt.close()
+#     
+x = fit_CP_list_good
+y = fit_LW_list_good
+x2 = fit_CP_list_bad
+y2 = fit_LW_list_bad
+plt.ylim(0.8,1.01)
+plt.xlim(0.8,1.01)
+plt.plot(x, y, 'ro',x2,y2,'bo')
+plt.xlabel('CP Fitness')
+plt.ylabel('LW Fitness')
+plt.title('CP vs LW Fitness')
+plt.savefig(dir+"/CP_vs_LW_scatter"+".png")
+plt.show()
+plt.close()
+#     
+x = fit_IP_list_good
+y = fit_LW_list_good
+x2 = fit_IP_list_bad
+y2 = fit_LW_list_bad
+plt.ylim(0.8,1.01)
+plt.xlim(0.8,1.01)
+plt.plot(x, y, 'ro',x2,y2,'bo')
+plt.xlabel('IP Fitness')
+plt.ylabel('LW Fitness')
+plt.title('IP vs LW Fitness')
+plt.savefig(dir+"/IP_vs_LW_scatter"+".png")
+plt.show()
+plt.close()
+        
+        
+# =============================================================================
+# if viz == 1:
+#     plt.plot(af.T,'y')
+#     plt.plot(bf.T,'b')
+#     plt.xlabel("Generations")
+#     plt.ylabel("Fitness")
+#     plt.title("Evolution")
+#     plt.savefig(dir+"/evol.png")
+#     plt.show()
+#     plt.close()
+#     
+#     x = fit_IP_list
+#     y = fit_CP_list
+#     plt.plot(x, y, 'o', color='black')
+#     plt.xlabel('IP Fitness')
+#     plt.ylabel('CP Fitness')
+#     plt.title('IP vs CP Fitness')
+#     plt.savefig(dir+"/IP_vs_CP_scatter"+".png")
+#     plt.show()
+#     plt.close()
+#     
+#     x = fit_CP_list
+#     y = fit_LW_list
+#     plt.plot(x, y, 'o', color='black')
+#     plt.xlabel('CP Fitness')
+#     plt.ylabel('LW Fitness')
+#     plt.title('CP vs LW Fitness')
+#     plt.savefig(dir+"/CP_vs_LW_scatter"+".png")
+#     plt.show()
+#     plt.close()
+#     
+#     x = fit_IP_list
+#     y = fit_LW_list
+#     plt.plot(x, y, 'o', color='black')
+#     plt.xlabel('IP Fitness')
+#     plt.ylabel('LW Fitness')
+#     plt.title('IP vs LW Fitness')
+#     plt.savefig(dir+"/IP_vs_LW_scatter"+".png")
+#     plt.show()
+#     plt.close()
+# =============================================================================
+    
+    
+    
+  
