@@ -12,7 +12,6 @@ def find_all_var(dir,ind):
     nH = 10
     v = np.zeros((3,10))
     nn = np.load("./{}/state_IP_{}.npy".format(dir,ind))
-    #
     v[0] = np.var(nn[:,nI:nI+nH],axis=0)
     nn = np.load("./{}/state_CP_{}.npy".format(dir,ind))
     v[1] = np.var(nn[:,nI:nI+nH],axis=0)
@@ -22,6 +21,7 @@ def find_all_var(dir,ind):
     max = np.max(v,axis=1)
     norm_var = (v.T / max)
     plt.plot(norm_var[0],'ro') #ip
+    #print(norm_var[0])
     np.save(dir+"/Var_IP_"+str(ind)+".npy",norm_var[0])
     #save IP Variance
     plt.plot(norm_var[1],'go') #cp

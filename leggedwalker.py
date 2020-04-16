@@ -29,7 +29,7 @@ class LeggedAgent:
         self.iy = iy
         self.cx = ix
         self.cy = iy
-        self.vx = 0.0
+        self.vx = 0.0 #forward velocity
         self.footstate = 0
         self.angle = 0.0
         self.omega = 0.0
@@ -49,7 +49,7 @@ class LeggedAgent:
         self.omega = 0.0
         self.forwardForce = 0.0
         self.backwardForce = 0.0
-        self.jointX = self.cx
+        self.jointX = self.cx 
         self.jointY = self.cy + 12.5
         self.footX = self.jointX + LegLength * math.sin(self.angle)
         self.footY = self.jointY + LegLength * math.cos(self.angle)

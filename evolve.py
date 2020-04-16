@@ -81,6 +81,7 @@ def fitnessFunction(genotype):
                 nn.step(np.concatenate((body.state(),np.zeros(4),np.zeros(3)))) #arrays for inputs for each task
                 f = body.step(stepsize_IP, np.array([nn.output()[0]]))
                 fit += f
+                
     fitness1 = fit/(duration_IP*total_trials_IP)
     fitness1 = (fitness1+7.65)/7 # Normalize to run between 0 and 1
     if fitness1 < 0.0:
