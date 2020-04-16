@@ -93,7 +93,7 @@ def lesions(genotype,actvalues):
                     maxfit = fit
             ip_fit[index]=fit
             index += 1
-
+            
     # Task 2
     cp_fit = np.zeros(nH1+nH2)
     body = cartpole.Cartpole()
@@ -182,11 +182,14 @@ ipp,cpp,lwp = lesions(bi,actvalues)
 ipp = ipp/f[0]
 cpp = cpp/f[1]
 lwp = lwp/f[2]
+#print(ipp,cpp,lwp)
 
 np.save(dir+"/lesions_IP_"+str(ind)+".npy",ipp)
 np.save(dir+"/lesions_CP_"+str(ind)+".npy",cpp)
 np.save(dir+"/lesions_LW_"+str(ind)+".npy",lwp)
 
+# =============================================================================
+# =============================================================================
 if viz == 1:
     plt.plot(ipp,'ro')
     plt.plot(cpp,'go')
@@ -196,6 +199,8 @@ if viz == 1:
     plt.title("Lesions")
     plt.savefig(dir+"/lesions_"+str(ind)+".png")
     plt.show()
+# 
+# =============================================================================
 
 # Stats on neurons for Ablations
 Threshold = 0.95
@@ -203,20 +208,41 @@ count = np.zeros(8)
 for (ip_neuron, cp_neuron, lw_neuron) in zip(ipp,cpp,lwp):
     if ip_neuron > Threshold and cp_neuron > Threshold and lw_neuron > Threshold: # no task neurons
         count[0] += 1
+        #print('no task neurons',ip_neuron,cp_neuron,lw_neuron)
     if ip_neuron <= Threshold and cp_neuron > Threshold and lw_neuron > Threshold: # ip task neurons
         count[1] += 1
+        #print('ip task',ip_neuron)
     if ip_neuron > Threshold and cp_neuron <= Threshold and lw_neuron > Threshold: # cp task neurons
         count[2] += 1
+        #print('cp task',cp_neuron)
     if ip_neuron > Threshold and cp_neuron > Threshold and lw_neuron <= Threshold: #lw task neurons
         count[3] += 1
+        #print('lw task',lw_neuron)
     if ip_neuron <= Threshold and cp_neuron <= Threshold and lw_neuron > Threshold: # ip + cp task neurons
         count[4] += 1
+        #print('ip and cp tasks',ip_neuron,cp_neuron)
     if ip_neuron <= Threshold and cp_neuron > Threshold and lw_neuron <= Threshold: # ip + lw task neurons
         count[5] += 1
+        #print('ip and lw',ip_neuron,lw_neuron)
     if ip_neuron > Threshold and cp_neuron <= Threshold and lw_neuron <= Threshold: # cp + lw task neurons
         count[6] += 1
+        #print('cp and lw',cp_neuron,lw_neuron)
     if ip_neuron <=  Threshold and cp_neuron <= Threshold and lw_neuron <= Threshold: # all  task neurons
         count[7] += 1
+        #print('all task',ip_neuron,cp_neuron,lw_neuron)
+
+#specific neurons corresponding to each task
+    print(ipp,cpp,lwp)
+
+
+
+# =============================================================================
+# x = [count[0],count[1],count[2],count[3],count[4],count[5],count[6],count[7]]
+# num_bins = 8
+# n, bins, patches = plt.hist(x, num_bins, facecolor='blue', alpha=0.5)
+# plt.show()
+# =============================================================================
+
 
 np.save(dir+"/stats_"+str(ind)+".npy",count)
-#print(count)
+#print()
