@@ -1,63 +1,58 @@
-<<<<<<< HEAD
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Apr 15 14:08:55 2020
-
-@author: benso
-"""
-
 from graphviz import Source
+
 temp = """
+
 digraph G {
     rankdir = LR;
     splines=false;
     edge[style=invis];
-    ranksep= 1.4;
+    ranksep= 2.5;
     {
-    node [shape=circle, color=yellow, style=filled, fillcolor=yellow]; #IP Input
-    IPI1 [label=<cos(theta)>];
-    IPI2 [label=<sin(theta)>]; 
-    IPI3 [label=<Theta dot>];
+    node [shape=circle, fontsize = 29, fixedsize=true, width = 2.0, height = 2.0, color=yellow, style=filled, fillcolor=yellow];
+    IPI1 [label=<cos(&#920;)>];
+    IPI2 [label=<sin(&#920;)>]; 
+    IPI3 [label=<&#969; >];
     }
     {
-    node [shape=circle, color=coral1, style=filled, fillcolor=coral1]; #CP Input
-    CPI1 [label=<     X     >];
+    node [shape=circle, fontsize = 29, fixedsize=true, width = 2.0, height = 2.0, color=chartreuse, style=filled, fillcolor=chartreuse];
+    CPI1 [label=<      X      >];
     CPI2 [label=<   X dot  >]; 
-    CPI3 [label=<   Theta   >];
-    CPI4 [label=<Theta dot>];
+    CPI3 [label=<   &#920;   >];
+    CPI4 [label=<   &#969;   >];
     }
     {
-    node [shape=circle, color=chartreuse, style=filled, fillcolor=chartreuse]; #LW Input
-    LWI1 [label=<Theta>];
-    LWI2 [label=<Omega>]; 
-    LWI3 [label=<LW<Footstate>];
+    node [shape=circle, fontsize = 29, fixedsize=true, width = 2.0, height = 2.0, color=coral1, style=filled, fillcolor=coral1];
+    LWI1 [label=<    &#920;   >];
+    LWI2 [label=<   &#969;    >];
+    LWI3 [label=<Foot State>];
+    
 }
 {
-    node [shape=circle, color=dodgerblue, style=filled, fillcolor=dodgerblue]; #HL1
-    HL11 [label=<HL<sub>1</sub><sup>(1)</sup>>];
-    HL12 [label=<HL<sub>1</sub><sup>(2)</sup>>];
-    HL13 [label=<HL<sub>1</sub><sup>(3)</sup>>];
-    HL14 [label=<HL<sub>1</sub><sup>(4)</sup>>];
-    HL15 [label=<HL<sub>1</sub><sup>(5)</sup>>];
-    HL21 [label=<HL<sub>2</sub><sup>(1)</sup>>];
-    HL22 [label=<HL<sub>2</sub><sup>(2)</sup>>];
-    HL23 [label=<HL<sub>2</sub><sup>(3)</sup>>];
-    HL24 [label=<HL<sub>2</sub><sup>(4)</sup>>];
-    HL25 [label=<HL<sub>2</sub><sup>(5)</sup>>];
+    node [shape=circle, fontsize = 30, fixedsize=true, width = 2.0, height = 2.0, color=dodgerblue, style=filled, fillcolor=dodgerblue];
+    a12 [label=<    1      >];
+    a22 [label=<    2      >];
+    a32 [label=<    3      >];
+    a42 [label=<    4      >];
+    a52 [label=<    5      >];
+    a13 [label=<    1      >];
+    a23 [label=<    2      >];
+    a33 [label=<    3      >];
+    a43 [label=<    4      >];
+    a53 [label=<    5      >];
 }
 {
-    node [shape=circle, color=yellow, style=filled, fillcolor=yellow];
-    IPO [label=<IP<sub>O</sub>>];
+    node [shape=circle, fontsize = 25, fixedsize=true, width = 2.0, height = 2.0, color=yellow, style=filled, fillcolor=yellow];
+    IPO [label=<L/R Force   >];
     }
     {
-    node [shape=circle, color=coral1, style=filled, fillcolor=coral1];
-    CPO [label=<CP<sub>O</sub>>];
+    node [shape=circle, fontsize = 25, fixedsize=true, width = 2.0, height = 2.0, color=chartreuse, style=filled, fillcolor=chartreuse];
+    CPO [label=<L/R Velocity>]; 
     }
     {
-    node [shape=circle, color=chartreuse, style=filled, fillcolor=chartreuse];
-    LWO1 [label=<LW<sub>O</sub><sup>(1)</sup>>];
-    LWO2 [label=<LW<sub>O</sub><sup>(2)</sup>>];
-    LWO3 [label=<LW<sub>O</sub><sup>(3)</sup>>];
+    node [shape=circle, fontsize = 20, fixedsize=true, width = 2.0, height = 2.0, color=coral1, style=filled, fillcolor=coral1];
+    LWO1 [label=<Forward Force>]; 
+    LWO2 [label=<Backward Force>]; 
+    LWO3 [label=<Leg Pos. Up/Down>]; 
 }
     {
         rank=same;
@@ -65,11 +60,11 @@ digraph G {
     }
     {
         rank=same;
-        HL11->HL12->HL13->HL14->HL15;
+        a12->a22->a32->a42->a52;
     }
     {
         rank=same;
-        HL21->HL22->HL23->HL24->HL25;
+        a13->a23->a33->a43->a53;
     }
     {
         rank=same;
@@ -79,116 +74,19 @@ digraph G {
     l0->IPI1;
     {rank=same; l0;IPI1};
     l1 [shape=plaintext, label="layer 2 (hidden layer)"];
-    l1->HL11;
-    {rank=same; l1;HL11};
+    l1->a12;
+    {rank=same; l1;a12};
     l2 [shape=plaintext, label="layer 3 (hidden layer)"];
-    l2->HL21;
-    {rank=same; l2;HL21};
+    l2->a13;
+    {rank=same; l2;a13};
     l3 [shape=plaintext, label="layer 4 (output layer)"];
     l3->IPO;
     {rank=same; l3;IPO};
     edge[style=solid, tailport=e, headport=w];
-    {IPI1;IPI2;IPI3;CPI1;CPI2;CPI3;CPI4;LWI1;LWI2;LWI3} -> {HL11;HL12;HL13;HL14;HL15};
-    {HL11;HL12;HL13;HL14;HL15} -> {HL21;HL22;HL23;HL24;HL25};
-    {HL21;HL22;HL23;HL24;HL25} -> {IPO;CPO;LWO1;LWO2;LWO3};
+    {IPI1;IPI2;IPI3;CPI1;CPI2;CPI3;CPI4;LWI1;LWI2;LWI3} -> {a12;a22;a32;a42;a52};
+    {a12;a22;a32;a42;a52} -> {a13;a23;a33;a43;a53};
+    {a13;a23;a33;a43;a53} -> {IPO;CPO;LWO1;LWO2;LWO3};
 }
 """
 s = Source(temp, filename="nn_schematic.gv", format="png")
-=======
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Apr 15 14:08:55 2020
-
-@author: benso
-"""
-
-from graphviz import Source
-temp = """
-digraph G {
-    rankdir = LR;
-    splines=false;
-    edge[style=invis];
-    ranksep= 1.4;
-    {
-    node [shape=circle, color=yellow, style=filled, fillcolor=yellow]; #IP Input
-    IPI1 [label=<cos(theta)>];
-    IPI2 [label=<sin(theta)>]; 
-    IPI3 [label=<Theta dot>];
-    }
-    {
-    node [shape=circle, color=coral1, style=filled, fillcolor=coral1]; #CP Input
-    CPI1 [label=<     X     >];
-    CPI2 [label=<   X dot  >]; 
-    CPI3 [label=<   Theta   >];
-    CPI4 [label=<Theta dot>];
-    }
-    {
-    node [shape=circle, color=chartreuse, style=filled, fillcolor=chartreuse]; #LW Input
-    LWI1 [label=<Theta>];
-    LWI2 [label=<Omega>]; 
-    LWI3 [label=<LW<Footstate>];
-}
-{
-    node [shape=circle, color=dodgerblue, style=filled, fillcolor=dodgerblue]; #HL1
-    HL11 [label=<HL<sub>1</sub><sup>(1)</sup>>];
-    HL12 [label=<HL<sub>1</sub><sup>(2)</sup>>];
-    HL13 [label=<HL<sub>1</sub><sup>(3)</sup>>];
-    HL14 [label=<HL<sub>1</sub><sup>(4)</sup>>];
-    HL15 [label=<HL<sub>1</sub><sup>(5)</sup>>];
-    HL21 [label=<HL<sub>2</sub><sup>(1)</sup>>];
-    HL22 [label=<HL<sub>2</sub><sup>(2)</sup>>];
-    HL23 [label=<HL<sub>2</sub><sup>(3)</sup>>];
-    HL24 [label=<HL<sub>2</sub><sup>(4)</sup>>];
-    HL25 [label=<HL<sub>2</sub><sup>(5)</sup>>];
-}
-{
-    node [shape=circle, color=yellow, style=filled, fillcolor=yellow];
-    IPO [label=<IP<sub>O</sub>>];
-    }
-    {
-    node [shape=circle, color=coral1, style=filled, fillcolor=coral1];
-    CPO [label=<CP<sub>O</sub>>];
-    }
-    {
-    node [shape=circle, color=chartreuse, style=filled, fillcolor=chartreuse];
-    LWO1 [label=<LW<sub>O</sub><sup>(1)</sup>>];
-    LWO2 [label=<LW<sub>O</sub><sup>(2)</sup>>];
-    LWO3 [label=<LW<sub>O</sub><sup>(3)</sup>>];
-}
-    {
-        rank=same;
-        IPI1->IPI2->IPI3->CPI1->CPI2->CPI3->CPI4->LWI1->LWI2->LWI3;
-    }
-    {
-        rank=same;
-        HL11->HL12->HL13->HL14->HL15;
-    }
-    {
-        rank=same;
-        HL21->HL22->HL23->HL24->HL25;
-    }
-    {
-        rank=same;
-        IPO->CPO->LWO1->LWO2->LWO3;
-    }
-    l0 [shape=plaintext, label="layer 1 (input layer)"];
-    l0->IPI1;
-    {rank=same; l0;IPI1};
-    l1 [shape=plaintext, label="layer 2 (hidden layer)"];
-    l1->HL11;
-    {rank=same; l1;HL11};
-    l2 [shape=plaintext, label="layer 3 (hidden layer)"];
-    l2->HL21;
-    {rank=same; l2;HL21};
-    l3 [shape=plaintext, label="layer 4 (output layer)"];
-    l3->IPO;
-    {rank=same; l3;IPO};
-    edge[style=solid, tailport=e, headport=w];
-    {IPI1;IPI2;IPI3;CPI1;CPI2;CPI3;CPI4;LWI1;LWI2;LWI3} -> {HL11;HL12;HL13;HL14;HL15};
-    {HL11;HL12;HL13;HL14;HL15} -> {HL21;HL22;HL23;HL24;HL25};
-    {HL21;HL22;HL23;HL24;HL25} -> {IPO;CPO;LWO1;LWO2;LWO3};
-}
-"""
-s = Source(temp, filename="nn_schematic.gv", format="png")
->>>>>>> e8fbe70b727e80f4fd5102d1e97bc3356029035b
-s.view(quiet=True)
+s.view()
