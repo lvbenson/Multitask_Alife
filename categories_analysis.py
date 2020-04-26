@@ -59,8 +59,9 @@ plt.xlabel('Interneurons')
 plt.yticks([])
 plt.ylabel('Layers')
 plt.title('Real data: Lesions')
-plt.savefig(dir+"/Real_LesionsX_"+str(ind)+".png")
-plt.show()
+plt.savefig("Real_Lesions_9.eps",format='eps')
+#plt.savefig(dir+"/Real_LesionsX_"+str(ind)+".png")
+#plt.show()
 plt.close()
 
 var_stack = 1-np.dstack((real_ip_var,real_cp_var,real_lw_var))
@@ -69,9 +70,10 @@ plt.xlabel('Interneurons')
 plt.yticks([])
 plt.ylabel('Layers')
 plt.title('Real data: Variance')
-plt.savefig(dir+"/Real_VarX_"+str(ind)+".png")
+plt.savefig("Real_Variance_9.eps",format='eps')
+#plt.savefig(dir+"/Real_VarX_"+str(ind)+".png")
 #plt.colorbar()
-plt.show()
+#plt.show()
 plt.close()
 
 mi_stack = 1-np.dstack((real_ip_mi,real_cp_mi,real_lw_mi))
@@ -80,50 +82,72 @@ plt.xlabel('Interneurons')
 plt.yticks([])
 plt.ylabel('Layers')
 plt.title('Real data: Mutual Information')
-plt.savefig(dir+"/Real_MIX_"+str(ind)+".png")
-plt.show()
+plt.savefig("Real_MI_9.eps",format='eps')
+#plt.savefig(dir+"/Real_MIX_"+str(ind)+".png")
+#plt.show()
 plt.close()
 
 
 ############
 #Plot lesions
 ############
-
-
-plt.plot(ip_lesion, color="red",marker = "o", linestyle = 'none')
-plt.plot(cp_lesion,color="green",marker = "o",linestyle = 'none')
-plt.plot(lw_lesion,color="blue",marker = "o",linestyle = 'none')
+plt.figure(figsize=(6.5,2.7))
+plt.subplot(1,3,1)
+plt.plot(ip_lesion, color="red",marker = "o", linestyle = 'none',label='IP Task')
+plt.plot(cp_lesion,color="green",marker = "o",linestyle = 'none',label='CP Task')
+plt.plot(lw_lesion,color="blue",marker = "o",linestyle = 'none',label='LW Task')
 plt.axhline(y=0.99, color='c', linestyle='-')
 plt.xlabel("Interneuron")
+plt.xticks(np.arange(10),['1','2','3','4','5','6','7','8','9','10'])
+xcoords = [0,1,2,3,4,5,6,7,8,9]
+for xc in xcoords:
+    plt.axvline(x=xc,color='gray',linestyle='--')
 plt.ylabel("Performance")
-plt.title("Lesions")
-plt.savefig(dir+"/Marker_LesionsX_"+str(ind)+".png")
-plt.show()
-plt.close()
+plt.title('(A)')
+plt.legend()
+#plt.savefig("Marker_LesionsXX.eps",format='eps')
+#plt.savefig(dir+"/Marker_LesionsX_"+str(ind)+".png")
+#plt.show()
+#plt.close()
 
         # plot variance
-plt.plot(ip_var, color="red",marker = "^",linestyle = 'none')
-plt.plot(cp_var, color="green",marker = "^",linestyle = 'none')
-plt.plot(lw_var, color="blue",marker = "^",linestyle = 'none')
+plt.subplot(1,3,2)
+plt.plot(ip_var, color="red",marker = "^",linestyle = 'none',label='IP Task')
+plt.plot(cp_var, color="green",marker = "^",linestyle = 'none',label='CP Task')
+plt.plot(lw_var, color="blue",marker = "^",linestyle = 'none',label='LW Task')
 plt.axhline(y=0.99, color='c', linestyle='-')
-plt.xlabel("Interneuron")
-plt.ylabel("Performance")
-plt.title("Variance")
-plt.savefig(dir+"/Marker_VarX_"+str(ind)+".png")
-plt.show()
-plt.close()
+#plt.xlabel("Interneuron")
+plt.xticks(np.arange(10),['1','2','3','4','5','6','7','8','9','10'])
+xcoords = [0,1,2,3,4,5,6,7,8,9]
+for xc in xcoords:
+    plt.axvline(x=xc,color='gray',linestyle='--')
+plt.ylabel("Variance")
+plt.title('(B)')
+#plt.legend()
+#plt.savefig("Marker_VarXX.eps",format='eps')
+#plt.savefig(dir+"/Marker_VarX_"+str(ind)+".png")
+#plt.show()
+#plt.close()
 
         # plot mutual information
-plt.plot(ip_mi, color="red",marker = "s", linestyle = 'none')
-plt.plot(cp_mi, color="green",marker = "s", linestyle = 'none')
-plt.plot(lw_mi, color="blue",marker = "s", linestyle = 'none')
+plt.subplot(1,3,3)
+plt.plot(ip_mi, color="red",marker = "s", linestyle = 'none', label='IP Task')
+plt.plot(cp_mi, color="green",marker = "s", linestyle = 'none',label='CP Task')
+plt.plot(lw_mi, color="blue",marker = "s", linestyle = 'none',label='LW Task')
 plt.axhline(y=0.99, color='c', linestyle='-')
-plt.xlabel("Interneuron")
-plt.ylabel("Performance")
-plt.title("MutualInfo")
-plt.savefig(dir+"/Marker_MIX_"+str(ind)+".png")
+#plt.xlabel("Interneuron")
+plt.xticks(np.arange(10),['1','2','3','4','5','6','7','8','9','10'])
+xcoords = [0,1,2,3,4,5,6,7,8,9]
+for xc in xcoords:
+    plt.axvline(x=xc,color='gray',linestyle='--')
+plt.ylabel("Mutual Information")
+plt.title('(C)')
+#plt.legend()
+plt.tight_layout()
+#plt.savefig("Marker_MIXX.eps",format='eps')
+plt.savefig(dir+"/ALLMARKERS_"+str(ind)+".png")
 plt.show()
-plt.close()
+#plt.close()
 
 
 
@@ -223,33 +247,91 @@ cat_lw_mi = np.reshape(lw_mi,(2,5))
 cat_stack_mi = 1-np.dstack((cat_ip_mi,cat_cp_mi,cat_lw_mi))
 
 
+# =============================================================================
+# plt.imshow(cat_stack_lesion)
+# ax = plt.gca();
+# ax.set_xticks(np.arange(0, 5, 1));
+# ax.set_yticks(np.arange(0, 3, 1));
+# 
+# # Labels for major ticks
+# ax.set_xticklabels(np.arange(1, 6, 1));
+# ax.set_yticklabels(np.arange(0, 3, 1));
+# ax.grid(which='major',color='w', linestyle='-', linewidth=2)
+# plt.show()
+# plt.close()
+# =============================================================================
+
 
 plt.imshow(cat_stack_lesion)
 plt.xlabel('Interneurons')
 plt.yticks([])
+plt.xticks(np.arange(5),['1','2','3','4','5'])
+plt.grid(axis='y',color='k')
 plt.ylabel('Layers')
 plt.title('Lesions: Categories')
-plt.savefig(dir+"/Cat_LesionX_"+str(ind)+".png")
-plt.show()
+plt.savefig("Cat_Lesions_9.eps",format='eps')
+#plt.savefig(dir+"/Cat_LesionX_"+str(ind)+".png")
+#plt.show()
 plt.close()
+
+
 
 plt.imshow(cat_stack_var)
 plt.xlabel('Interneurons')
 plt.yticks([])
 plt.ylabel('Layers')
+plt.xticks(np.arange(5),['1','2','3','4','5'])
 plt.title('Variance: Categories')
-plt.savefig(dir+"/Cat_VarX_"+str(ind)+".png")
-plt.show()
+plt.savefig("Cat_Var_9.eps",format='eps')
+#plt.savefig(dir+"/Cat_VarX_"+str(ind)+".png")
+#plt.show()
 plt.close()
 
 plt.imshow(cat_stack_mi)
 plt.xlabel('Interneurons')
 plt.yticks([])
+plt.xticks(np.arange(5),['1','2','3','4','5'])
 plt.ylabel('Layers')
 plt.title('Mutual Information: Categories')
-plt.savefig(dir+"/Cat_MIX_"+str(ind)+".png")
-plt.show()
+plt.savefig("Cat_MI_9.eps",format='eps')
+#plt.savefig(dir+"/Cat_MIX_"+str(ind)+".png")
+#plt.show()
 plt.close()
+
+
+plt.figure(figsize=(6,3))
+
+plt.subplot(1,3,1)
+plt.imshow(cat_stack_lesion)
+plt.xlabel('Interneurons')
+plt.yticks([])
+plt.xticks(np.arange(5),['1','2','3','4','5'])
+plt.grid(axis='y',color='k')
+plt.ylabel('Layers')
+plt.title('(A)')
+
+
+
+plt.subplot(1,3,2)
+plt.imshow(cat_stack_var)
+#plt.xlabel('Interneurons')
+plt.yticks([])
+#plt.ylabel('Layers')
+plt.xticks(np.arange(5),['1','2','3','4','5'])
+plt.title('(B)')
+
+
+plt.subplot(1,3,3)
+plt.imshow(cat_stack_mi)
+#plt.xlabel('Interneurons')
+plt.yticks([])
+plt.xticks(np.arange(5),['1','2','3','4','5'])
+#plt.ylabel('Layers')
+plt.title('(C)')
+
+plt.tight_layout()
+plt.savefig(dir+"/CAT_ALL_"+str(ind)+".png")
+plt.show()
 
 
 
