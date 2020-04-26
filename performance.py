@@ -156,56 +156,99 @@ fit_CP_list_bad = []
 fit_LW_list_bad = []
 #best_net_list = []
 
+plt.figure(figsize=(3.2,2.7))
+
 best_list = []
 for i in range(reps):
     af[i] = np.load(dir+"/average_history_"+str(i)+".npy")
     bf[i] = np.load(dir+"/best_history_"+str(i)+".npy")
     bi[i] = np.load(dir+"/best_individual_"+str(i)+".npy")
-    #best_net_list.append(bi[i])
     
     f,f1,f2,f3,m1,m2,m3,ns1,ns2,ns3=analysis(bi[i])
-    if bf[i][-1] > 0.8: #check last element in bf
+    np.save(dir+"/perfmap_IP_"+str(i)+".npy",m1) #behavioral analysis based on starting conditions
+    np.save(dir+"/perfmap_CP_"+str(i)+".npy",m2)
+    np.save(dir+"/perfmap_LW_"+str(i)+".npy",m3)
+
+    np.save(dir+"/state_IP_"+str(i)+".npy",ns1) #to be used for infolesion analysis
+    np.save(dir+"/state_CP_"+str(i)+".npy",ns2)
+    np.save(dir+"/state_LW_"+str(i)+".npy",ns3)
+    
+# =============================================================================
+#     plt.imshow(m1) #plotting fit_IP
+#     plt.colorbar()
+#     plt.xlabel("Theta")
+#     plt.ylabel("ThetaDot")
+#     plt.title("Inverted Pendulum")
+#     plt.savefig(dir+"/perfmap_IP_"+str(i)+".png")
+#     plt.show()
+#     plt.close()
+#              
+#     plt.imshow(m2) #plotting fit_CP
+#     plt.colorbar()
+#     plt.xlabel("Theta")
+#     plt.ylabel("ThetaDot")
+#     plt.title("Cart Pole")
+#     plt.savefig(dir+"/perfmap_CP_"+str(i)+".png")
+#     plt.show()
+#     plt.close()
+# #             
+#              plt.imshow(m3)
+#              plt.colorbar()
+#              plt.xlabel("Theta")
+#              plt.ylabel("ThetaDot")
+#              plt.title("Legged Walker")
+#              plt.savefig(dir+"/perfmap_LW_"+str(i)+".png")
+#              plt.show()
+#              plt.close()
+# =============================================================================
+    
+    if bf[i][-1] >= 0.8: #check last element in bf
         fit_IP_list_good.append(f1)
         fit_CP_list_good.append(f2)
         fit_LW_list_good.append(f3)
-
-        #plt.plot(bf[i].T,'b')
+        
+        
+        plt.plot(bf[i].T,'b')
         #if bf[i][-1] >=0.95:
             #plt.plot(bf[i].T,'r')
         
-    if bf[i][-1]<0.8:
+    else:
         fit_IP_list_bad.append(f1)
         fit_CP_list_bad.append(f2)
         fit_LW_list_bad.append(f3)
         #plt.plot(af[i].T,'k')
-        #plt.plot(bf[i].T,'y')
+        plt.plot(bf[i].T,'y')
     #if bf[i][-1]>=0.95:
         #plt.plot(bf[i].T,'r')
         
     best_list.append(bf[i][-1])
         
 #print(best_list)
-#best_network = best_list.index(max(best_list))
+best_network = best_list.index(max(best_list))
 #print(best_network)
 
-
-#plt.plot(bf[best_network].T,'r')
-#plt.xlabel('generations')
-#plt.ylabel('performance')
-#plt.title('evolution')
-#plt.savefig(dir+"/evolve_all.png")
-#plt.show()
+plt.plot(bf[best_network].T,'r',label="Best Network")
+plt.xlabel('generations')
+plt.ylabel('performance')
+plt.title('Evolution of Multifunctional Circuits')
+plt.legend()
+plt.tight_layout()
+plt.savefig(dir+"/evolve_all_NEW.png")
+plt.show()
+plt.close()
 
 #print(max([sublist for sublist in best_net_list])
 
 # =============================================================================
-#         np.save(dir+"/perfmap_IP_"+str(i)+".npy",m1) #behavioral analysis based on starting conditions
-#         np.save(dir+"/perfmap_CP_"+str(i)+".npy",m2)
-#         np.save(dir+"/perfmap_LW_"+str(i)+".npy",m3)
-# 
-#         np.save(dir+"/state_IP_"+str(i)+".npy",ns1) #to be used for infolesion analysis
-#         np.save(dir+"/state_CP_"+str(i)+".npy",ns2)
-#         np.save(dir+"/state_LW_"+str(i)+".npy",ns3)
+# =============================================================================
+#          np.save(dir+"/perfmap_IP_"+str(i)+".npy",m1) #behavioral analysis based on starting conditions
+#          np.save(dir+"/perfmap_CP_"+str(i)+".npy",m2)
+#          np.save(dir+"/perfmap_LW_"+str(i)+".npy",m3)
+#  
+#          np.save(dir+"/state_IP_"+str(i)+".npy",ns1) #to be used for infolesion analysis
+#          np.save(dir+"/state_CP_"+str(i)+".npy",ns2)
+#          np.save(dir+"/state_LW_"+str(i)+".npy",ns3)
+# =============================================================================
 # 
 # =============================================================================
         #print('rep,best fitness, fitness for 3 tasks',i,bf[i][-1],f)
@@ -250,51 +293,61 @@ for i in range(reps):
 #             plt.close()
 # 
 # =============================================================================
-        
+#print(fit_IP_list_bad)
+#print(fit_CP_list_bad)
+#print(fit_LW_list_bad)
+
+
+plt.figure(figsize=(6.9,2.5))
+
+plt.subplot(1,3,1)
+
+x_cp = fit_CP_list_good
+y_lw = fit_LW_list_good
+x2_cp = fit_CP_list_bad
+y2_lw = fit_LW_list_bad
+plt.ylim(0.8,1.01)
+plt.xlim(0.78,1.03)
+plt.plot(x_cp, y_lw, 'bo', x2_cp, y2_lw, 'yo')
+plt.plot(max(x_cp),max(y_lw),'ro', label='best overall fitness')
+plt.xlabel('CP Fitness')
+plt.ylabel('LW Fitness')
+plt.title('(A)')
+
+plt.subplot(1,3,2)
+
+x_new = fit_IP_list_good
+y_new = fit_LW_list_good
+x2_new = fit_IP_list_bad
+y2_new = fit_LW_list_bad
+plt.ylim(0.8,1.01)
+plt.xlim(0.78,1.03)
+plt.plot(x_new, y_new, 'bo',x2_new,y2_new,'yo')
+plt.plot(max(x_new),max(y_new),'ro')
+plt.xlabel('IP Fitness')
+plt.ylabel('LW Fitness')
+plt.title('(B)')
+
+plt.subplot(1,3,3)
+
 x = fit_IP_list_good   
 y = fit_CP_list_good
 x2 = fit_IP_list_bad
 y2 = fit_CP_list_bad
 plt.ylim(0.8,1.01)
-plt.xlim(0.8,1.01)
+plt.xlim(0.78,1.03)
 plt.plot(x, y, 'bo', x2, y2, 'yo')
 plt.plot(max(x),max(y),'ro')
 plt.xlabel('IP Fitness')
 plt.ylabel('CP Fitness')
-plt.title('IP vs CP Fitness')
-plt.savefig(dir+"/IP_vs_CP_scatter"+".png")
+plt.title('(C)')
+plt.tight_layout()
+plt.savefig('scatters.png')
 plt.show()
 plt.close()
 #     
-x = fit_CP_list_good
-y = fit_LW_list_good
-x2 = fit_CP_list_bad
-y2 = fit_LW_list_bad
-plt.ylim(0.8,1.01)
-plt.xlim(0.8,1.01)
-plt.plot(x, y, 'bo', x2, y2, 'yo')
-plt.plot(max(x),max(y),'ro')
-plt.xlabel('CP Fitness')
-plt.ylabel('LW Fitness')
-plt.title('CP vs LW Fitness')
-plt.savefig(dir+"/CP_vs_LW_scatter"+".png")
-plt.show()
-plt.close()
 #     
-x = fit_IP_list_good
-y = fit_LW_list_good
-x2 = fit_IP_list_bad
-y2 = fit_LW_list_bad
-plt.ylim(0.8,1.01)
-plt.xlim(0.8,1.01)
-plt.plot(x, y, 'bo',x2,y2,'yo')
-plt.plot(max(x),max(y),'ro')
-plt.xlabel('IP Fitness')
-plt.ylabel('LW Fitness')
-plt.title('IP vs LW Fitness')
-plt.savefig(dir+"/IP_vs_LW_scatter"+".png")
-plt.show()
-plt.close()
+
         
         
 # =============================================================================
